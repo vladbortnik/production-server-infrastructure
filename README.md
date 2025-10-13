@@ -2,7 +2,9 @@
 
 A complete infrastructure setup for hosting multiple web applications on a single DigitalOcean droplet using Docker, Nginx, and comprehensive security measures.
 
-![Production Server Infrastructure](assets/images/hero/server-setup-title-img.png)
+![Production Server Infrastructure](assets/images/hero/server-setup-title-img-overlay.jpg)
+
+<div align="center">
 
 [![SSL Rating](https://img.shields.io/badge/SSL%20Labs-A-brightgreen)](https://www.ssllabs.com/ssltest/)
 [![Security Headers](https://img.shields.io/badge/Security%20Headers-A%2B-brightgreen)](https://securityheaders.com/)
@@ -11,39 +13,55 @@ A complete infrastructure setup for hosting multiple web applications on a singl
 [![Nginx](https://img.shields.io/badge/Nginx-Configured-009639?logo=nginx&logoColor=white)](https://nginx.org/)
 [![Ubuntu](https://img.shields.io/badge/Ubuntu-24.04%20LTS-E95420?logo=ubuntu&logoColor=white)](https://ubuntu.com/)
 
-## 🌐 Live Demo
+<br>
 
-[View detailed project showcase](https://vladbortnik.dev/server-setup.html)
+🌐 **Live Demo:** [![View Showcase](https://img.shields.io/badge/View-Project_Showcase-0EA5E9?style=flat-square&logo=google-chrome&logoColor=white)](https://vladbortnik.dev/server-setup.html)
 
-## 📑 Table of Contents
+</div>
 
-- [Live Demo](#-live-demo)
-- [Overview](#-overview)
+## 📑 Navigation
+
+<table>
+<tr><td>
+
+### 🎯 Quick Start
+- [At a Glance](#-at-a-glance)
 - [Motivation](#-motivation)
-- [Architecture](#-architecture)
-- [Tech Stack](#-tech-stack)
-- [Key Features](#-key-features)
 - [Project Outcomes](#-project-outcomes)
-- [Docker Infrastructure](#-docker-infrastructure)
-- [Nginx Configuration](#-nginx-configuration)
-- [Security Implementation](#-security-hardening)
+- [Tech Stack](#-tech-stack)
+
+### 🏗️ Technical Deep-Dive
+- [Architecture Overview](#-architecture)
+- [Hidden Database Pattern](#-the-hidden-database-pattern)
+- [Load Balancing Intelligence](#-load-balancing-smarter-than-you-think)
+- [Resource Management](#-resource-limits-prevent-disasters)
+
+</td><td>
+
+### 💡 Insights & Learning
 - [Challenges & Solutions](#-challenges--solutions)
 - [Lessons Learned](#-lessons-learned)
-- [Want to Build Something Similar?](#-want-to-build-something-similar)
+- [Security Journey](#-security-hardening)
+
+### 📚 Resources & Community
+- [Build Guide](#-want-to-build-something-similar)
 - [Documentation](#-documentation)
 - [Use Cases](#-use-cases)
-- [Contributing](#-contributing)
-- [License](#-license)
-- [Contact](#-contact)
+- [Connect with Me](#-lets-connect)
 
-## 📋 Overview
+</td></tr>
+</table>
 
-This project demonstrates a production-grade server infrastructure capable of hosting:
-- Static portfolio website
-- Multiple Dockerized web applications (Flask/Gunicorn)
-- Database services (PostgreSQL, MySQL)
-- Secure SSL/TLS termination
-- Advanced security hardening
+## 🎯 At a Glance
+
+<div align="center">
+  <img src="assets/images/architecture/server-setup-diagram.webp" width="800px" alt="Complete Production Infrastructure Architecture">
+  <br><br>
+  <strong>Complete production infrastructure on $12/month</strong><br>
+  3 applications • A+ security ratings • 99.9% uptime • Full control over the stack
+</div>
+
+<br>
 
 ## 💡 Motivation
 
@@ -70,55 +88,13 @@ As a backend developer, I wanted to deeply understand production infrastructure 
 
 ## 🏗️ Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        DigitalOcean Droplet                      │
-│                         Ubuntu 24.04 LTS                         │
-├─────────────────────────────────────────────────────────────────┤
-│  ┌──────────┐  ┌──────────┐                                     │
-│  │ Fail2Ban │  │   UFW    │  ◄─── Security Layer                │
-│  │          │  │ Firewall │                                      │
-│  └──────────┘  └──────────┘                                      │
-│                                                                   │
-│  ┌───────────────────────────────────────────────────────────┐  │
-│  │                    Nginx Server                            │  │
-│  │  • Reverse Proxy      • Load Balancing                     │  │
-│  │  • SSL Termination    • Request Caching                    │  │
-│  │  • Server Blocks      • Security Headers                   │  │
-│  └───────────────────────────────────────────────────────────┘  │
-│          │                    │                    │             │
-│          ▼                    ▼                    ▼             │
-│  ┌────────────┐    ┌─────────────────┐  ┌─────────────────┐   │
-│  │ Portfolio  │    │  Docker App #1  │  │  Docker App #2  │   │
-│  │  Website   │    │  ┌───────────┐  │  │  ┌───────────┐  │   │
-│  │  (Static)  │    │  │Flask/     │  │  │  │Flask/     │  │   │
-│  │            │    │  │Gunicorn   │  │  │  │Gunicorn   │  │   │
-│  └────────────┘    │  └─────┬─────┘  │  │  └─────┬─────┘  │   │
-│                    │        │        │  │        │        │   │
-│                    │  ┌─────▼─────┐  │  │  ┌─────▼─────┐  │   │
-│                    │  │   MySQL   │  │  │  │PostgreSQL │  │   │
-│                    │  └───────────┘  │  │  └───────────┘  │   │
-│                    └─────────────────┘  └─────────────────┘   │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                    ┌─────────┴─────────┐
-                    │   External APIs    │
-                    │ • Azure Vision     │
-                    │ • Spoonacular      │
-                    └────────────────────┘
-```
-
-### Visual Architecture Diagram
-
-![Server Architecture Diagram](assets/images/architecture/server-setup-diagram.webp)
-
-*Interactive architecture showing the complete infrastructure from DigitalOcean hosting to external APIs, including security layers, Nginx routing, Docker containers, and database services.*
-
 ### DNS Configuration
 
-![DNS Dashboard](assets/images/architecture/dns-dashboard.png)
-
-*DigitalOcean DNS management showing A records for the main domain and subdomains, all pointing to the same droplet IP address.*
+<div align="center">
+  <img src="assets/images/architecture/dns-dashboard.png" width="700px" alt="DNS Configuration Dashboard">
+  <br>
+  <em>DigitalOcean DNS management: A records for main domain and subdomains pointing to single droplet</em>
+</div>
 
 ## 🛠️ Tech Stack
 
@@ -139,6 +115,61 @@ As a backend developer, I wanted to deeply understand production infrastructure 
 - **Web Framework**: Flask with Gunicorn
 - **Databases**: PostgreSQL 16.4, MySQL
 - **APIs**: Azure Vision API, Spoonacular API
+
+---
+
+## 🔒 The Hidden Database Pattern
+
+<div align="center">
+  <img src="assets/images/docker/networks-diagram.png" width="750px" alt="Docker Network Segregation Architecture">
+</div>
+
+### How Docker Networks Protect Your Data
+
+Here's a security insight most developers miss: **Your database doesn't need internet access.**
+
+#### 🚨 The Problem
+
+Default Docker setups expose database ports (5432, 3306) to the host machine. Even with firewall rules in place, this creates an unnecessary attack surface. If someone compromises your server, those ports become visible.
+
+####  ✅ The Solution
+
+Docker network segregation creates two isolated networks with different access levels:
+
+| Network | Purpose | Internet Access | Who Can Connect |
+|---------|---------|-----------------|-----------------|
+| **Frontend** | Web services | ✅ Yes | Nginx → App containers |
+| **Backend** | Databases only | ❌ No | App containers → Databases |
+
+```yaml
+# docker-compose.yml
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+    internal: true  # ← This is the magic line
+
+services:
+  web:
+    networks:
+      - frontend  # Can talk to Nginx
+      - backend   # Can talk to database
+
+  database:
+    networks:
+      - backend   # ONLY accessible via backend network
+```
+
+#### 🎯 The Result
+
+**Database ports never touch the host machine.** Even if someone compromises the server, they can't see ports 5432 or 3306. From the WAN perspective, those ports literally don't exist.
+
+> **Defense in Depth:** This pattern adds a security layer that works even if firewall rules fail. Multiple security layers compound, making each subsequent breach exponentially harder.
+
+📂 **Explore:** [Docker configurations](docker/) | [Network setup guide](docs/architecture.md)
+
+---
 
 ## ✨ Key Features
 
@@ -272,57 +303,183 @@ This repository documents a completed production infrastructure. The setup proce
 
 ## 🔧 Configuration Highlights
 
-### 🐳 Docker Infrastructure
+### 🐳 Docker Infrastructure Overview
 
-![Docker Architecture](assets/images/docker/docker-diagram.webp)
+<div align="center">
+  <img src="assets/images/docker/docker-diagram.webp" width="700px" alt="Complete Docker Architecture">
+  <br>
+  <em>Full Docker infrastructure showing network segregation, container relationships, and data flow</em>
+</div>
 
-*Docker network segregation showing frontend/backend network isolation, resource management, and database port protection.*
+**Key Features:**
+- **Network Isolation** - Frontend/backend segregation protects databases
+- **Resource Management** - Memory and CPU limits prevent cascading failures
+- **Volume Persistence** - Named volumes for database data survival
+- **Port Security** - Only necessary ports exposed to host
 
-**Network Segregation:**
-- **Frontend Network**: Public-facing web services accessible from Nginx
-- **Backend Network**: Database-only access (isolated from internet)
-- **Port Mapping**: Only necessary ports exposed (e.g., 5002:5002, 5001:5001)
-- **Security**: Database ports (5432, 3306) not exposed to host or internet
+📂 **Details:** [Network Segregation Story](#-the-hidden-database-pattern) | [Resource Management Story](#-resource-limits-prevent-disasters)
 
-![Docker Compose Configuration](assets/images/docker/docker-compose.png)
+---
 
-*docker-compose.yml showing service definitions, network configuration, resource limits, and volume mounts.*
+## 💾 Resource Limits Prevent Disasters
 
-![Docker Container Status](assets/images/docker/docker-ps.png)
+<div align="center">
+  <img src="assets/images/docker/docker-stats.png" width="750px" alt="Docker Container Resource Usage">
+  <br>
+  <em>Real-time resource monitoring: predictable, controlled, safe</em>
+</div>
 
-*Running containers with port mappings, status, and resource allocation.*
+### The Catastrophe You're Avoiding
 
-![Docker Stats](assets/images/docker/docker-stats.png)
+**Scenario without resource limits:**
 
-*Real-time resource usage showing memory, CPU, and network I/O for each container.*
+```
+1. Traffic spike hits Recipe app
+2. Memory leak in application code
+3. Container consumes 1.8GB of 2GB total RAM
+4. Database gets OOM (Out of Memory) killed
+5. Both Recipe and BookFinder apps crash
+6. Everything goes down
+```
 
-**Resource Management:**
-- **Memory Limit**: 384MB per container
-- **Memory Reservation**: 192MB guaranteed
-- **CPU Quota**: 0.3 cores allocated
-- **Volume Persistence**: Named volumes for database data
+**Scenario with resource limits:**
 
-### ⚡ Nginx Configuration
+```
+1. Traffic spike hits Recipe app
+2. Memory leak in application code
+3. Container hits 384MB limit
+4. That specific container restarts
+5. Other services keep running
+6. System stays operational
+```
 
-![Nginx Reverse Proxy](assets/images/nginx/reverse-proxy.png)
+### How Docker Resource Management Works
 
-*Nginx as a reverse proxy forwarding requests to Docker containers while handling SSL termination.*
+```yaml
+# docker-compose.yml
+services:
+  web:
+    deploy:
+      resources:
+        limits:
+          memory: 384M      # Hard cap - kill container if exceeded
+          cpus: '0.3'       # Max 30% of one CPU core
+        reservations:
+          memory: 192M      # Guaranteed minimum allocation
+```
 
-![Nginx Load Balancer](assets/images/nginx/load-balancer.png)
+#### Key Concepts
 
-*Load balancing configuration distributing traffic across multiple backend servers.*
+**Memory Limits vs Reservations:**
+- **Limit** = Maximum allowed (hard cap)
+- **Reservation** = Guaranteed minimum (Docker scheduler ensures this is available)
+- **Gap between them** = Burst capacity for traffic spikes
 
-![Nginx Server Blocks](assets/images/nginx/server-blocks.png)
+**Why 384MB limit?**
+- 2GB total RAM / 3 apps = ~666MB per app
+- Leave 30% buffer for OS and spikes = 384MB limit
+- Result: Predictable behavior, no resource starvation
 
-*Virtual host configuration enabling multiple domains on a single server.*
+**Current Utilization:**
+- 📊 **65% RAM usage** (1.3GB / 2GB) - Room for growth
+- ⚙️ **40% CPU usage** - Comfortable headroom
+- 💾 **8GB disk** (32% of capacity) - Space for logs and data
 
-**Configuration Features:**
-- **Reverse Proxy**: Routes traffic to appropriate Docker containers
-- **SSL Termination**: Handles HTTPS encryption/decryption
-- **Load Balancing**: Distributes traffic for high availability
-- **Server Blocks**: Multi-domain hosting (portfolio, recipe, bookfinder)
-- **Caching**: Static content caching for improved performance
-- **Security Headers**: CSP, X-Frame-Options, HSTS, etc.
+> **Lesson:** Constraints drive optimization. Without limits, bugs become production incidents. With limits, failures are isolated and recoverable.
+
+📂 **Explore:** [Docker compose files](docker/) | [Resource tuning guide](docs/architecture.md)
+
+---
+
+## ⚖️ Load Balancing: Smarter Than You Think
+
+<div align="center">
+  <img src="assets/images/nginx/load-balancer.png" width="750px" alt="Nginx Load Balancer Configuration">
+</div>
+
+### The Algorithms That Keep Your App Online
+
+When traffic spikes, one server isn't enough. But how do you split traffic fairly across multiple backend servers? The algorithm matters more than you might think.
+
+#### 🔄 Round Robin (Default)
+Requests distributed evenly in rotation: Server1 → Server2 → Server3 → Server1...
+
+```nginx
+upstream backend {
+    server app1:5001;
+    server app2:5002;
+    server app3:5003;
+}
+```
+
+**Best for:** Stateless applications, servers with equal capacity
+
+---
+
+#### 🔢 IP Hash
+Same client IP always routes to the same server
+
+```nginx
+upstream backend {
+    ip_hash;
+    server app1:5001;
+    server app2:5002;
+}
+```
+
+**Best for:** Session persistence without shared storage (sticky sessions)
+**Why it matters:** User stays on same server, maintaining session state
+
+---
+
+#### ⚡ Least Connections
+Traffic goes to the server with fewest active connections
+
+```nginx
+upstream backend {
+    least_conn;
+    server app1:5001;
+    server app2:5002;
+}
+```
+
+**Best for:** Long-lived connections, varying request processing times
+**Why it matters:** Prevents one server from being overwhelmed while others sit idle
+
+---
+
+#### ⚖️ Weighted Distribution
+Some servers handle more traffic based on their capacity
+
+```nginx
+upstream backend {
+    server powerful_server:5001 weight=3;
+    server normal_server:5002 weight=1;
+    # Powerful server gets 75% of traffic
+}
+```
+
+**Best for:** Mixed server specs, gradual rollouts (canary deployments), A/B testing
+
+---
+
+> **Pro Tip:** Start with Round Robin for simplicity. Switch to IP Hash only if session management requires it (adds server affinity constraints). Use Least Connections for backends with unpredictable processing times.
+
+📂 **Explore:** [Nginx configurations](nginx/sites-available/) | [Load balancing setup](docs/architecture.md)
+
+---
+
+## 🔧 Additional Nginx Capabilities
+
+**Reverse Proxy & SSL Termination**
+- Routes traffic to appropriate Docker containers based on subdomain
+- Handles HTTPS encryption/decryption at the edge
+- Adds security headers to all responses
+
+**Multi-Domain Server Blocks**
+- Hosts portfolio, recipe app, and bookfinder on same server
+- Each domain gets isolated configuration
+- Independent SSL certificates per subdomain
 
 ### 🔒 Security Headers
 ```nginx
@@ -468,23 +625,46 @@ This is a personal portfolio project, but suggestions and improvements are welco
 - Submit pull requests for improvements
 - Share your own infrastructure setups
 
-## 📄 License
+---
 
-MIT License - feel free to use this configuration for your own projects.
+<div align="center">
 
-## 🔗 Links
+## 🌟 Let's Connect
 
-- [Live Portfolio](https://vladbortnik.dev)
-- [Detailed Project Showcase](https://vladbortnik.dev/server-setup.html)
-- [LinkedIn](https://linkedin.com/in/vladyslav-bortnik)
-- [GitHub](https://github.com/vladbortnik)
+[![Portfolio](https://img.shields.io/badge/Portfolio-vladbortnik.dev-0EA5E9?style=for-the-badge&logo=google-chrome&logoColor=white)](https://vladbortnik.dev)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/vladyslav-bortnik)
+[![Twitter](https://img.shields.io/badge/Twitter-@vladbortnik__dev-1DA1F2?style=for-the-badge&logo=x&logoColor=white)](https://x.com/vladbortnik_dev)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/vladbortnik)
 
-## 📧 Contact
+<br>
 
-**Vlad Bortnik**
-Software Engineer | DevOps Enthusiast
-[vladbortnik.dev](https://vladbortnik.dev)
+### 📝 Blog Series: From Zero to Production
+
+*Coming Soon* - Deep-dives into production infrastructure setup
+
+```
+🔐 Part 1: Docker Network Security Patterns
+⚖️ Part 2: Nginx Load Balancing Algorithms Explained
+🔒 Part 3: SSL Automation & Certificate Management
+💰 Part 4: Cost Optimization: Self-Hosted vs Managed Platforms
+📊 Part 5: Monitoring & Observability Best Practices
+```
+
+*Subscribe to my [blog](https://vladbortnik.dev/blog) for updates when these drop*
+
+</div>
 
 ---
 
-⭐ If you find this project helpful, consider giving it a star!
+<div align="center">
+
+**Built with ❤️ by [Vlad Bortnik](https://vladbortnik.dev)**
+Software Engineer | DevOps Enthusiast
+
+<br>
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
+
+⭐ **If this helped you, star the repo!** It helps others discover it.
+
+</div>

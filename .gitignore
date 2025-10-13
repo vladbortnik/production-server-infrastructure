@@ -1,6 +1,7 @@
 # Research files (internal use only - not for public repo)
 _research/
 GIT-SETUP.md
+IMPROVEME.md
 
 # Environment files with secrets
 **/.env
