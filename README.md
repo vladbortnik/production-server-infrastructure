@@ -21,6 +21,8 @@ A complete infrastructure setup for hosting multiple web applications on a singl
 
 ## 📑 Navigation
 
+<div align="center">
+
 <table>
 <tr><td>
 
@@ -51,6 +53,8 @@ A complete infrastructure setup for hosting multiple web applications on a singl
 
 </td></tr>
 </table>
+
+</div>
 
 ## 🎯 At a Glance
 
@@ -668,3 +672,4 @@ Software Engineer | DevOps Enthusiast
 ⭐ **If this helped you, star the repo!** It helps others discover it.
 
 </div>
+
