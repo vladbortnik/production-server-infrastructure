@@ -132,7 +132,7 @@ Here's a security insight most developers miss: **Your database doesn't need int
 
 Default Docker setups expose database ports (5432, 3306) to the host machine. Even with firewall rules in place, this creates an unnecessary attack surface. If someone compromises your server, those ports become visible.
 
-####  ✅ The Solution
+#### ✅ The Solution
 
 Docker network segregation creates two isolated networks with different access levels:
 
@@ -632,7 +632,7 @@ This is a personal portfolio project, but suggestions and improvements are welco
 ## 🌟 Let's Connect
 
 [![Portfolio](https://img.shields.io/badge/Portfolio-vladbortnik.dev-0EA5E9?style=for-the-badge&logo=google-chrome&logoColor=white)](https://vladbortnik.dev)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/vladyslav-bortnik)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](vladbortnik.dev/linkedin)
 [![Twitter](https://img.shields.io/badge/Twitter-@vladbortnik__dev-1DA1F2?style=for-the-badge&logo=x&logoColor=white)](https://x.com/vladbortnik_dev)
 [![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/vladbortnik)
 
