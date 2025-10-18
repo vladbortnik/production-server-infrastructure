@@ -13,11 +13,11 @@ A complete infrastructure setup for hosting multiple web applications on a singl
 [![Nginx](https://img.shields.io/badge/Nginx-Configured-009639?logo=nginx&logoColor=white)](https://nginx.org/)
 [![Ubuntu](https://img.shields.io/badge/Ubuntu-24.04%20LTS-E95420?logo=ubuntu&logoColor=white)](https://ubuntu.com/)
 
+</div>
+
 <br>
 
-🌐 **Live Demo:** [![View Showcase](https://img.shields.io/badge/View-Project_Showcase-0EA5E9?style=flat-square&logo=google-chrome&logoColor=white)](https://vladbortnik.dev/server-setup.html)
-
-</div>
+🌐 **Live Demo:** [Production-Grade Multi-Application Server](https://vladbortnik.dev/server-setup.html)
 
 ## 📑 Navigation
 
@@ -639,6 +639,7 @@ This is a personal portfolio project, but suggestions and improvements are welco
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/vladbortnik)
 [![Twitter](https://img.shields.io/badge/Twitter-@vladbortnik__dev-1DA1F2?style=for-the-badge&logo=x&logoColor=white)](https://x.com/vladbortnik_dev)
 [![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/vladbortnik)
+[![Contact](https://img.shields.io/badge/Contact_Me-Get_In_Touch-00C853?style=for-the-badge&logo=gmail&logoColor=white)](https://vladbortnik.dev/contact.html)
 
 <br>
 
