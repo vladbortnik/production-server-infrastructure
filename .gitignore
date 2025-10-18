@@ -1,7 +1,7 @@
 # Research files (internal use only - not for public repo)
 _research/
-GIT-SETUP.md
-IMPROVEME.md
+DEPLOYMENT/GIT-SETUP.md
+.claude/
 
 # Environment files with secrets
 **/.env
@@ -49,7 +49,6 @@ temp/
 # Backup files
 *.bak
 *.backup
-*~
 
 # OS generated files
 .fseventsd
