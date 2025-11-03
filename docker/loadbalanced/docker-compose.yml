@@ -1,0 +1,106 @@
+# Load-Balanced Docker Compose Configuration with Network Segregation and Resource Management
+# This setup runs 3 instances of the Flask application behind an Nginx load balancer
+
+# Network Configuration - Segregates frontend and backend traffic
+networks:
+  frontend:                              # Public-facing network (Internet-accessible)
+  backend:                               # Private, internal network (Database access only)
+
+services:
+  # Web Application Instance 1
+  web1:
+    build: .
+    # Gunicorn command: 4 worker processes, bind to all interfaces on port 5002
+    command: gunicorn -w 4 -b 0.0.0.0:5002 run:app
+    # volumes:                           # ⚠️ Shared volumes can cause conflicts with multiple instances
+    #   - .:/code                        # Disable volume mounting in production load-balanced setup
+    networks:
+      - frontend                         # For communication with Internet (via Nginx)
+      - backend                          # For communication with database
+    ports:
+      - "5002:5002"                      # Expose on host port 5002
+    env_file:
+      - .env                             # Load environment variables
+    depends_on:
+      - db                               # Wait for database to start
+    # Resource Limits - Prevents any single container from consuming excessive resources
+    mem_limit: 384m                      # Maximum memory usage
+    mem_reservation: 192m                # Guaranteed memory allocation
+    cpus: 0.3                            # CPU limit (30% of one CPU core)
+    restart: unless-stopped
+
+  # Web Application Instance 2
+  web2:
+    build: .
+    command: gunicorn -w 4 -b 0.0.0.0:5002 run:app
+    # volumes:
+    #   - .:/code
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "5003:5002"                      # ⚠️ host_port:container_port - Must match Nginx upstream config
+    env_file:
+      - .env
+    depends_on:
+      - db
+    mem_limit: 384m
+    mem_reservation: 192m
+    cpus: 0.3
+    restart: unless-stopped
+
+  # Web Application Instance 3
+  web3:
+    build: .
+    command: gunicorn -w 4 -b 0.0.0.0:5002 run:app
+    # volumes:
+    #   - .:/code
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "5004:5002"                      # Must match Nginx upstream config (see nginx/recipe-loadbalanced.conf)
+    env_file:
+      - .env
+    depends_on:
+      - db
+    mem_limit: 384m
+    mem_reservation: 192m
+    cpus: 0.3
+    restart: unless-stopped
+
+  # Note: Database Migration Service
+  # The migration service works well only with a single instance setup.
+  # For load-balanced setups, run migrations manually before starting the containers:
+  #   docker-compose run --rm web1 flask db upgrade
+  #
+  # migration:
+  #   build: .
+  #   command: ./scripts/wait-for-migrations.sh
+  #   volumes:
+  #     - .:/code
+  #   env_file:
+  #     - .env
+  #   depends_on:
+  #     - db
+  #   restart: "no"
+
+  # PostgreSQL Database - Backend Network Only (Maximum Security)
+  db:
+    image: postgres:16.4                 # Use PostgreSQL 16.4
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persistent storage
+    env_file:
+      - .env                             # Contains DB credentials (POSTGRES_USER, POSTGRES_PASSWORD, etc.)
+    networks:
+      - backend                          # ✅ Only accessible via backend network (web services only)
+    # ports:                             # ✅ Port NOT exposed to host - isolated from Internet
+    #   - "5432:5432"                    # Commenting this out prevents external database access
+    mem_limit: 384m                      # Resource limits for database container
+    mem_reservation: 192m
+    cpus: 0.3
+    restart: unless-stopped
+
+# Named volumes for data persistence
+volumes:
+  postgres_data:                         # PostgreSQL data persists across container restarts

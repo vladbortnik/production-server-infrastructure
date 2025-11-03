@@ -1,205 +1,374 @@
-# Production-Grade Multi-Application Server
+# Production-Grade Multi-Application Server Infrastructure
 
-A complete infrastructure setup for hosting multiple web applications on a single DigitalOcean droplet using Docker, Nginx, and comprehensive security measures.
+Real-world Nginx and Docker configurations from a production server hosting multiple Flask applications on a single DigitalOcean droplet.
 
-![Production Server Infrastructure](assets/images/hero/server-setup-title-img-overlay.jpg)
+![Server Infrastructure](assets/images/hero/server-setup-title-img-overlay.jpg)
 
 <div align="center">
 
 [![SSL Rating](https://img.shields.io/badge/SSL%20Labs-A-brightgreen)](https://www.ssllabs.com/ssltest/)
-[![Security Headers](https://img.shields.io/badge/Security%20Headers-A%2B-brightgreen)](https://securityheaders.com/)
+[![Security Headers](https://img.shields.io/badge/Security%20Headers-A-brightgreen)](https://securityheaders.com/)
 [![HTTP Observatory](https://img.shields.io/badge/HTTP%20Observatory-A%2B-brightgreen)](https://observatory.mozilla.org/)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
-[![Nginx](https://img.shields.io/badge/Nginx-Configured-009639?logo=nginx&logoColor=white)](https://nginx.org/)
-[![Ubuntu](https://img.shields.io/badge/Ubuntu-24.04%20LTS-E95420?logo=ubuntu&logoColor=white)](https://ubuntu.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+[🌐 Live Demo](https://vladbortnik.dev) • [📖 Configs](#configuration-files) • [🔒 Security](#security)
 
 </div>
 
-<br>
+---
 
-🌐 **Live Demo:** [Production-Grade Multi-Application Server](https://vladbortnik.dev/server-setup.html)
+## What This Repository Contains
 
-## 📑 Navigation
+This repository provides **production-tested configuration files** from my actual multi-application server setup:
 
-<div align="center">
+- ✅ **2 Nginx configurations**: Simple reverse proxy + load-balanced setup
+- ✅ **2 Docker Compose files**: Single instance + 3-instance load-balanced
+- ✅ **Database migration script**: Automatic Flask-Migrate execution
+- ✅ **SSL/TLS guide**: DNS-01 challenge for wildcard certificates
+- ✅ **Security configs**: TLS 1.3, security headers, A+ ratings
 
-<table>
-<tr><td>
+**Not included**: Generic examples or theoretical explanations. Every configuration here is extracted from real, working production servers.
 
-### 🎯 Quick Start
-- [At a Glance](#-at-a-glance)
-- [Motivation](#-motivation)
-- [Project Outcomes](#-project-outcomes)
-- [Tech Stack](#-tech-stack)
+---
 
-### 🏗️ Technical Deep-Dive
-- [Architecture Overview](#-architecture)
-- [Hidden Database Pattern](#-the-hidden-database-pattern)
-- [Load Balancing Intelligence](#-load-balancing-smarter-than-you-think)
-- [Resource Management](#-resource-limits-prevent-disasters)
-
-</td><td>
-
-### 💡 Insights & Learning
-- [Challenges & Solutions](#-challenges--solutions)
-- [Lessons Learned](#-lessons-learned)
-- [Security Journey](#-security-hardening)
-
-### 📚 Resources & Community
-- [Build Guide](#-want-to-build-something-similar)
-- [Documentation](#-documentation)
-- [Use Cases](#-use-cases)
-- [Connect with Me](#-lets-connect)
-
-</td></tr>
-</table>
-
-</div>
-
-## 🎯 At a Glance
+## Architecture
 
 <div align="center">
-  <img src="assets/images/architecture/server-setup-diagram.webp" width="800px" alt="Complete Production Infrastructure Architecture">
+  <img src="assets/images/architecture/server-setup-diagram.webp" width="800px" alt="Production Server Architecture">
   <br><br>
-  <strong>Complete production infrastructure on $12/month</strong><br>
-  3 applications • A+ security ratings • 99.9% uptime • Full control over the stack
+  <em>Single DigitalOcean droplet running Nginx + Docker, hosting 3 applications on subdomains</em>
 </div>
 
-<br>
+### Infrastructure Overview
 
-## 💡 Motivation
-
-As a backend developer, I wanted to deeply understand production infrastructure beyond managed platforms like Heroku or Vercel. This project was born from three key goals:
-
-### Why I Built This
-
-1. **Learn by Doing** - Move beyond tutorials to real production deployment challenges
-2. **Cost Efficiency** - Host multiple applications on one $12/month droplet vs $50+/month on managed services
-3. **Full Control** - Own the entire stack from DNS configuration to database optimization
-
-### Why Not Use Managed Services?
-
-| Aspect | This Setup | Heroku/Render | AWS Lightsail | Vercel |
-|--------|------------|---------------|---------------|---------|
-| **Monthly Cost** | $12 | $50+ | $30+ | $20+ |
-| **Learning Value** | Deep infrastructure knowledge | Limited | Medium | Minimal |
-| **Flexibility** | Complete control | Constrained | Good | Platform-specific |
-| **Customization** | Unlimited | Limited | Good | Framework-locked |
-| **Multi-App Hosting** | Yes (unlimited) | Per-app pricing | Yes | Limited |
-| **DevOps Skills** | Comprehensive | Basic | Intermediate | Deployment only |
-
-**The Trade-off:** More setup complexity in exchange for deeper understanding, complete control, and significant cost savings.
-
-## 🏗️ Architecture
+**Single Server Setup:**
+- **Host**: DigitalOcean Droplet (Ubuntu 24.04 LTS, 2GB RAM, 1 vCPU)
+- **Web Server**: Nginx (reverse proxy, SSL termination, load balancing)
+- **Containerization**: Docker + Docker Compose
+- **Applications**: 3 Flask apps (Portfolio, Recipe App, BookFinder)
+- **Databases**: PostgreSQL 16.4, MySQL
+- **SSL/TLS**: Let's Encrypt with wildcard certificate
 
 ### DNS Configuration
 
 <div align="center">
-  <img src="assets/images/architecture/dns-dashboard.png" width="700px" alt="DNS Configuration Dashboard">
-  <br>
-  <em>DigitalOcean DNS management: A records for main domain and subdomains pointing to single droplet</em>
+  <img src="assets/images/architecture/dns-dashboard.png" width="700px" alt="DNS A Records Configuration">
+  <br><br>
+  <em>All subdomains point to the same droplet IP. Nginx routes traffic based on Host header.</em>
 </div>
 
-## 🛠️ Tech Stack
-
-### Infrastructure
-- **Hosting**: DigitalOcean Droplet (2GB RAM / 1vCPU / 25GB SSD)
-- **OS**: Ubuntu 24.04 LTS
-- **Web Server**: Nginx
-- **Containerization**: Docker & Docker Compose
-- **DNS**: DigitalOcean DNS Management
-
-### Security
-- **SSL/TLS**: Let's Encrypt (Certbot)
-- **Firewall**: UFW (Uncomplicated Firewall)
-- **Intrusion Prevention**: Fail2Ban
-- **Security Headers**: CSP, X-Frame-Options, HSTS, etc.
-
-### Applications
-- **Web Framework**: Flask with Gunicorn
-- **Databases**: PostgreSQL 16.4, MySQL
-- **APIs**: Azure Vision API, Spoonacular API
+**Domain structure:**
+- `vladbortnik.dev` → Portfolio (static site served by Nginx)
+- `recipe.vladbortnik.dev` → Recipe App (Dockerized Flask + PostgreSQL)
+- `bookfinder.vladbortnik.dev` → BookFinder App (Dockerized Flask + MySQL)
 
 ---
 
-## 🔒 The Hidden Database Pattern
+## Tech Stack
 
-<div align="center">
-  <img src="assets/images/docker/networks-diagram.png" width="750px" alt="Docker Network Segregation Architecture">
-</div>
+**Infrastructure:**
+- Ubuntu 24.04 LTS
+- Nginx (reverse proxy + load balancer)
+- Docker & Docker Compose
+- DigitalOcean DNS
 
-### How Docker Networks Protect Your Data
+**Application:**
+- Flask web framework
+- Gunicorn WSGI server (4 workers per instance)
+- PostgreSQL 16.4
+- MySQL
 
-Here's a security insight most developers miss: **Your database doesn't need internet access.**
+**Security:**
+- Let's Encrypt SSL/TLS (wildcard certificate via DNS-01 challenge)
+- TLS 1.3 only
+- Security headers (HSTS, CSP, X-Frame-Options, etc.)
+- UFW firewall
+- Fail2Ban
 
-#### 🚨 The Problem
+---
 
-Default Docker setups expose database ports (5432, 3306) to the host machine. Even with firewall rules in place, this creates an unnecessary attack surface. If someone compromises your server, those ports become visible.
+## Repository Structure
 
-#### ✅ The Solution
-
-Docker network segregation creates two isolated networks with different access levels:
-
-| Network | Purpose | Internet Access | Who Can Connect |
-|---------|---------|-----------------|-----------------|
-| **Frontend** | Web services | ✅ Yes | Nginx → App containers |
-| **Backend** | Databases only | ❌ No | App containers → Databases |
-
-```yaml
-# docker-compose.yml
-networks:
-  frontend:
-    driver: bridge
-  backend:
-    driver: bridge
-    internal: true  # ← This is the magic line
-
-services:
-  web:
-    networks:
-      - frontend  # Can talk to Nginx
-      - backend   # Can talk to database
-
-  database:
-    networks:
-      - backend   # ONLY accessible via backend network
+```
+production-server-infrastructure/
+├── README.md                           # This guide
+├── LICENSE                             # MIT License
+│
+├── nginx/                              # Nginx configuration files
+│   ├── recipe-simple.conf              # Single backend server
+│   └── recipe-loadbalanced.conf        # 3 servers with ip_hash load balancing
+│
+├── docker/                             # Docker Compose configurations
+│   ├── simple/
+│   │   ├── docker-compose.yml          # 1 web + db + auto migrations
+│   │   └── scripts/
+│   │       └── wait-for-migrations.sh  # Database migration automation
+│   └── loadbalanced/
+│       └── docker-compose.yml          # 3 web instances + db with network segregation
+│
+├── docs/
+│   └── ssl-setup.md                    # SSL/TLS configuration guide
+│
+└── assets/images/                      # Architecture diagrams and screenshots
 ```
 
-#### 🎯 The Result
+---
 
-**Database ports never touch the host machine.** Even if someone compromises the server, they can't see ports 5432 or 3306. From the WAN perspective, those ports literally don't exist.
+## Configuration Files
 
-> **Defense in Depth:** This pattern adds a security layer that works even if firewall rules fail. Multiple security layers compound, making each subsequent breach exponentially harder.
+### Simple Setup (Single Instance)
 
-📂 **Explore:** [Docker configurations](docker/) | [Network setup guide](docs/architecture.md)
+**Purpose:** Development, staging, or low-traffic production applications.
+
+#### Docker Compose Configuration
+
+[`docker/simple/docker-compose.yml`](docker/simple/docker-compose.yml)
+
+```yaml
+services:
+  web:
+    build: .
+    command: gunicorn -w 4 -b 0.0.0.0:5002 run:app
+    ports:
+      - "5002:5002"
+    depends_on:
+      - db
+      - migration
+    restart: unless-stopped
+
+  migration:
+    build: .
+    command: ./scripts/wait-for-migrations.sh
+    depends_on:
+      - db
+    restart: "no"  # Runs once and exits
+
+  db:
+    image: postgres:16.4
+    ports:
+      - "5432:5432"  # ⚠️ Database port exposed to host
+    restart: unless-stopped
+```
+
+**Key characteristics:**
+- **1 web container** with Gunicorn (4 workers)
+- **Automatic migrations** via dedicated migration service
+- **Database port exposed** (`5432:5432`) for easy debugging
+- **No network segregation** - uses default Docker network
+- **No resource limits** - simpler configuration
+
+**Migration Script:** [`docker/simple/scripts/wait-for-migrations.sh`](docker/simple/scripts/wait-for-migrations.sh)
+
+This Bash script waits for PostgreSQL to be ready, then runs Flask-Migrate commands automatically (`flask db init`, `flask db migrate`, `flask db upgrade`).
+
+#### Nginx Configuration
+
+[`nginx/recipe-simple.conf`](nginx/recipe-simple.conf)
+
+Nginx acts as a reverse proxy, forwarding HTTPS requests to the Flask application on port 5002. Learn more about [Nginx reverse proxy configuration](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/).
+
+```nginx
+# HTTP → HTTPS redirect
+server {
+    listen 80;
+    server_name your-app.your-domain.com;
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+# HTTPS server with reverse proxy
+server {
+    listen 443 ssl http2;
+
+    # TLS 1.3 only (maximum security)
+    ssl_protocols TLSv1.3;
+
+    # Security headers
+    add_header Strict-Transport-Security "max-age=63072000" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+
+    # Reverse proxy to Flask app
+    location / {
+        proxy_pass http://127.0.0.1:5002;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+**Usage:**
+```bash
+cd docker/simple
+docker-compose up -d
+```
 
 ---
 
-## ✨ Key Features
+### Load-Balanced Setup (3 Instances)
 
-### 🔒 Security Hardening
-- **SSL/TLS A+ Rating**: Perfect forward secrecy, strong ciphers
-- **Security Headers**: Content Security Policy, XSS protection
-- **Firewall Configuration**: UFW with strict port rules
-- **Intrusion Prevention**: Fail2Ban for SSH and HTTP protection
-- **Automated SSL Renewal**: Certbot timer for certificate management
+**Purpose:** Production environments requiring high availability and horizontal scaling.
 
-### 🐳 Docker Infrastructure
-- **Network Segregation**: Frontend/backend network isolation
-- **Resource Management**: Memory limits, CPU quotas
-- **Volume Persistence**: Named volumes for database data
-- **Port Isolation**: Database ports not exposed to internet
+#### Nginx Load Balancer Configuration
 
-### ⚡ Nginx Configuration
-- **Reverse Proxy**: Routes traffic to backend applications
-- **Load Balancing**: Distributes traffic across services
-- **Server Blocks**: Multi-domain hosting on single server
-- **Caching**: Static content caching for performance
-- **HTTP/2**: Modern protocol support
+[`nginx/recipe-loadbalanced.conf`](nginx/recipe-loadbalanced.conf)
 
-## 📊 Project Outcomes
+<div align="center">
+  <img src="assets/images/nginx/load-balancer.png" width="750px" alt="Nginx Upstream Block">
+  <br><br>
+  <em>Nginx upstream configuration with ip_hash algorithm for session persistence</em>
+</div>
 
-### Security Ratings Achieved
+```nginx
+upstream recipe_app {
+    ip_hash;  # Same client IP → same backend server
+
+    server 127.0.0.1:5002 max_fails=3 fail_timeout=30s;
+    server 127.0.0.1:5003 max_fails=3 fail_timeout=30s;
+    server 127.0.0.1:5004 max_fails=3 fail_timeout=30s;
+}
+
+server {
+    listen 443 ssl http2;
+    # ... SSL configuration ...
+
+    location / {
+        proxy_pass http://recipe_app;  # Forward to upstream group
+        # ... proxy headers ...
+    }
+}
+```
+
+**Why `ip_hash`?** The `ip_hash` directive ensures the same client IP always connects to the same backend server, maintaining session state without requiring shared session storage (like Redis). This is crucial for stateful Flask applications that store session data locally.
+
+Learn more about [Nginx load balancing algorithms](https://docs.nginx.com/nginx/admin-guide/load-balancer/http-load-balancer/) and the [upstream module](https://nginx.org/en/docs/http/ngx_http_upstream_module.html).
+
+**Health checks:**
+- `max_fails=3`: Mark server unavailable after 3 failed attempts
+- `fail_timeout=30s`: Wait 30 seconds before retrying
+
+#### Docker Compose with Network Segregation
+
+[`docker/loadbalanced/docker-compose.yml`](docker/loadbalanced/docker-compose.yml)
+
+<div align="center">
+  <img src="assets/images/docker/docker-diagram.webp" width="750px" alt="Docker Network Architecture">
+  <br><br>
+  <em>Network segregation: Frontend (Internet-accessible) vs Backend (database-only)</em>
+</div>
+
+```yaml
+networks:
+  frontend:  # Internet-accessible
+  backend:   # Database access only
+
+services:
+  web1:
+    build: .
+    command: gunicorn -w 4 -b 0.0.0.0:5002 run:app
+    networks:
+      - frontend  # Can communicate with Nginx
+      - backend   # Can communicate with database
+    ports:
+      - "5002:5002"
+    mem_limit: 384m
+    mem_reservation: 192m
+    cpus: 0.3
+    restart: unless-stopped
+
+  web2:
+    # ... same config, port 5003:5002 ...
+
+  web3:
+    # ... same config, port 5004:5002 ...
+
+  db:
+    image: postgres:16.4
+    networks:
+      - backend  # ONLY accessible via backend network
+    # ports:     # ✅ Port NOT exposed to host
+    #   - "5432:5432"
+    mem_limit: 384m
+    mem_reservation: 192m
+    cpus: 0.3
+```
+
+**Network segregation explained:** The database is connected ONLY to the `backend` network, making it inaccessible from the Internet even if the firewall fails. Web containers connect to both networks, allowing them to receive traffic from Nginx (frontend) and query the database (backend). Learn more about [Docker Compose networking](https://docs.docker.com/compose/networking/).
+
+<div align="center">
+  <img src="assets/images/docker/networks-diagram.png" width="700px" alt="Docker Network Topology">
+  <br><br>
+  <em>Network topology showing 5 bridge networks including frontend/backend segregation</em>
+</div>
+
+**Resource limits explained:** Each container has explicit memory and CPU limits to prevent resource starvation. If one container experiences a memory leak and hits its 384MB limit, Docker kills only that container while others continue running. Learn more about [Docker resource constraints](https://docs.docker.com/config/containers/resource_constraints/).
+
+**Why these values?**
+- 2GB total RAM ÷ 3 web instances ≈ 666MB per app
+- 384MB limit leaves 30% buffer for OS and traffic spikes
+- 192MB reservation guarantees minimum resources
+
+**⚠️ Migration note:** The automatic migration service doesn't work reliably with multiple instances. Run migrations manually before starting:
+```bash
+docker-compose run --rm web1 flask db upgrade
+```
+
+**Usage:**
+```bash
+cd docker/loadbalanced
+docker-compose up -d
+docker stats  # Monitor resource usage
+```
+
+---
+
+## Simple vs Load-Balanced Comparison
+
+| Feature | Simple Setup | Load-Balanced Setup |
+|---------|-------------|---------------------|
+| **Web instances** | 1 | 3 |
+| **Networks** | Default (no segregation) | `frontend` + `backend` |
+| **Database port** | Exposed (`5432:5432`) | Not exposed (internal only) |
+| **Resource limits** | None | 384MB mem, 0.3 CPU per container |
+| **Auto migrations** | Yes (dedicated service) | No (manual: `docker-compose run --rm web1 flask db upgrade`) |
+| **Load balancing** | No | Yes (`ip_hash` algorithm) |
+| **High availability** | No (single point of failure) | Yes (survives 1-2 instance failures) |
+| **Best for** | Development, staging, small apps | Production with traffic spikes |
+
+---
+
+## SSL/TLS Configuration
+
+### DNS-01 Challenge for Wildcard Certificates
+
+For servers hosting multiple applications on subdomains, **DNS-01 challenge** is the optimal SSL validation method.
+
+**Why DNS-01 over HTTP-01?**
+
+| Feature | HTTP-01 | DNS-01 |
+|---------|---------|--------|
+| **Wildcard certificates** | ❌ Not supported | ✅ Supported (`*.yourdomain.com`) |
+| **Port 80 requirement** | ✅ Must be open | ❌ Not required |
+| **Multiple subdomains** | ❌ One cert per subdomain | ✅ One cert for all |
+
+**My setup:** A single wildcard certificate (`*.vladbortnik.dev`) covers all subdomains: `recipe.vladbortnik.dev`, `bookfinder.vladbortnik.dev`, and any future additions.
+
+**Detailed guide:** [`docs/ssl-setup.md`](docs/ssl-setup.md) explains DNS-01 vs HTTP-01 challenges with examples.
+
+**External resources:**
+- [Let's Encrypt Challenge Types](https://letsencrypt.org/docs/challenge-types/) - Official documentation
+- [Certbot Documentation](https://eff-certbot.readthedocs.io/) - Installation and automation
+
+---
+
+## Security
+
+This infrastructure achieves A/A+ security ratings through modern TLS configuration and comprehensive security headers.
+
+### Security Test Results
 
 <div align="center">
 
@@ -210,430 +379,172 @@ services:
 
 </div>
 
-### Performance & Cost Metrics
+**Test your own setup:**
+- [SSL Labs Server Test](https://www.ssllabs.com/ssltest/) - Comprehensive SSL/TLS analysis
+- [Mozilla Observatory](https://observatory.mozilla.org/) - Security configuration scanner
+- [Security Headers Test](https://securityheaders.com/) - HTTP header analyzer
 
-**Uptime & Reliability:**
-- ✅ **99.9%+ uptime** over 6 months of operation
-- ✅ **Response time**: <100ms for static content, <200ms for dynamic content
-- ✅ **Zero security incidents** since deployment
+### TLS 1.3 Configuration
 
-**Cost Efficiency:**
-- 💰 **$12/month** - Total infrastructure cost
-- 📊 **3 applications** - Hosted on single droplet
-- 🔄 **~$4/app/month** - Actual cost per application
-- 📈 **70% cost savings** vs managed platforms ($50+/month equivalent)
-
-**Resource Utilization:**
-- 🧮 **65% RAM usage** - 1.3GB out of 2GB allocated
-- ⚙️ **40% CPU usage** - Average load under normal traffic
-- 💾 **8GB disk usage** - 32% of 25GB SSD capacity
-- 🐳 **6 Docker containers** - Running across 2 networks
-
-### What This Demonstrates
-
-**Technical Skills:**
-- ✅ Production-grade infrastructure design and implementation
-- ✅ Advanced Docker networking and container orchestration
-- ✅ Nginx configuration for reverse proxy and load balancing
-- ✅ Comprehensive security hardening (SSL A+, CSP, Fail2Ban)
-- ✅ DNS management and subdomain configuration
-- ✅ Linux server administration (Ubuntu 24.04 LTS)
-
-**DevOps Practices:**
-- ✅ Infrastructure as Code mindset
-- ✅ Security-first approach
-- ✅ Cost optimization strategies
-- ✅ Real-world problem-solving
-- ✅ Documentation and knowledge sharing
-
-## 📁 Repository Structure
-
-```
-server-infrastructure/
-├── README.md                      # This file
-├── docker/                        # Docker configurations
-│   ├── recipe-app/
-│   │   └── docker-compose.yml
-│   └── bookfinder-app/
-│       └── docker-compose.yml
-├── nginx/                         # Nginx configurations
-│   ├── sites-available/
-│   │   ├── portfolio.conf
-│   │   ├── recipe-subdomain.conf
-│   │   └── bookfinder-subdomain.conf
-│   └── security-headers.conf
-├── security/                      # Security documentation
-│   ├── ufw-setup.md
-│   ├── fail2ban-config.md
-│   └── ssl-setup.md
-├── docs/                          # Additional documentation
-│   ├── architecture.md
-│   ├── deployment-guide.md
-│   └── troubleshooting.md
-└── diagrams/                      # Architecture diagrams
-```
-
-## 📚 Want to Build Something Similar?
-
-This repository documents a completed production infrastructure. The setup process involves manual server configuration, security hardening, and application deployment.
-
-**If you'd like to replicate this setup, comprehensive guides are available:**
-
-- 📖 **[Complete Deployment Guide](docs/deployment-guide.md)** - Step-by-step instructions from server provisioning to application deployment
-- 🏛️ **[Architecture Details](docs/architecture.md)** - Technical deep-dive into system design and network topology
-- 🔒 **[Security Setup](security/)** - Hardening procedures, SSL configuration, and firewall rules
-- 🐛 **[Troubleshooting Guide](docs/troubleshooting.md)** - Common issues and solutions
-
-**Quick Overview:**
-```bash
-# High-level steps (see deployment guide for details)
-1. Provision DigitalOcean droplet (Ubuntu 24.04 LTS)
-2. Configure DNS records
-3. Install Nginx, Docker, Certbot, UFW, Fail2Ban
-4. Deploy applications via Docker Compose
-5. Configure SSL certificates with Let's Encrypt
-6. Apply security hardening
-```
-
-**Note:** This is not a plug-and-play solution. It requires understanding of Linux, Docker, Nginx, and networking concepts. Estimated setup time: 4-6 hours for experienced developers.
-
-## 📊 Performance Metrics
-
-- **SSL Labs Score**: A
-- **HTTP Observatory**: A+
-- **Security Headers**: A+
-- **Uptime**: 99.9%+
-- **Response Time**: <100ms (static content)
-
-## 🔧 Configuration Highlights
-
-### 🐳 Docker Infrastructure Overview
-
-<div align="center">
-  <img src="assets/images/docker/docker-diagram.webp" width="700px" alt="Complete Docker Architecture">
-  <br>
-  <em>Full Docker infrastructure showing network segregation, container relationships, and data flow</em>
-</div>
-
-**Key Features:**
-- **Network Isolation** - Frontend/backend segregation protects databases
-- **Resource Management** - Memory and CPU limits prevent cascading failures
-- **Volume Persistence** - Named volumes for database data survival
-- **Port Security** - Only necessary ports exposed to host
-
-📂 **Details:** [Network Segregation Story](#-the-hidden-database-pattern) | [Resource Management Story](#-resource-limits-prevent-disasters)
-
----
-
-## 💾 Resource Limits Prevent Disasters
-
-<div align="center">
-  <img src="assets/images/docker/docker-stats.png" width="750px" alt="Docker Container Resource Usage">
-  <br>
-  <em>Real-time resource monitoring: predictable, controlled, safe</em>
-</div>
-
-### The Catastrophe You're Avoiding
-
-**Scenario without resource limits:**
-
-```
-1. Traffic spike hits Recipe app
-2. Memory leak in application code
-3. Container consumes 1.8GB of 2GB total RAM
-4. Database gets OOM (Out of Memory) killed
-5. Both Recipe and BookFinder apps crash
-6. Everything goes down
-```
-
-**Scenario with resource limits:**
-
-```
-1. Traffic spike hits Recipe app
-2. Memory leak in application code
-3. Container hits 384MB limit
-4. That specific container restarts
-5. Other services keep running
-6. System stays operational
-```
-
-### How Docker Resource Management Works
-
-```yaml
-# docker-compose.yml
-services:
-  web:
-    deploy:
-      resources:
-        limits:
-          memory: 384M      # Hard cap - kill container if exceeded
-          cpus: '0.3'       # Max 30% of one CPU core
-        reservations:
-          memory: 192M      # Guaranteed minimum allocation
-```
-
-#### Key Concepts
-
-**Memory Limits vs Reservations:**
-- **Limit** = Maximum allowed (hard cap)
-- **Reservation** = Guaranteed minimum (Docker scheduler ensures this is available)
-- **Gap between them** = Burst capacity for traffic spikes
-
-**Why 384MB limit?**
-- 2GB total RAM / 3 apps = ~666MB per app
-- Leave 30% buffer for OS and spikes = 384MB limit
-- Result: Predictable behavior, no resource starvation
-
-**Current Utilization:**
-- 📊 **65% RAM usage** (1.3GB / 2GB) - Room for growth
-- ⚙️ **40% CPU usage** - Comfortable headroom
-- 💾 **8GB disk** (32% of capacity) - Space for logs and data
-
-> **Lesson:** Constraints drive optimization. Without limits, bugs become production incidents. With limits, failures are isolated and recoverable.
-
-📂 **Explore:** [Docker compose files](docker/) | [Resource tuning guide](docs/architecture.md)
-
----
-
-## ⚖️ Load Balancing: Smarter Than You Think
-
-<div align="center">
-  <img src="assets/images/nginx/load-balancer.png" width="750px" alt="Nginx Load Balancer Configuration">
-</div>
-
-### The Algorithms That Keep Your App Online
-
-When traffic spikes, one server isn't enough. But how do you split traffic fairly across multiple backend servers? The algorithm matters more than you might think.
-
-#### 🔄 Round Robin (Default)
-Requests distributed evenly in rotation: Server1 → Server2 → Server3 → Server1...
+Both Nginx configurations use TLS 1.3 exclusively for maximum security and performance:
 
 ```nginx
-upstream backend {
-    server app1:5001;
-    server app2:5002;
-    server app3:5003;
-}
+ssl_protocols TLSv1.3;
+ssl_prefer_server_ciphers off;
+ssl_session_timeout 1d;
+ssl_session_cache shared:MozSSL:10m;
+ssl_session_tickets off;
 ```
 
-**Best for:** Stateless applications, servers with equal capacity
+**Benefits of TLS 1.3:**
+- Faster handshakes (1-RTT vs 2-RTT in TLS 1.2)
+- Removal of vulnerable cipher suites
+- Always-encrypted metadata
+- Forward secrecy by default
 
----
+Generate your own secure SSL configuration at [Mozilla SSL Configuration Generator](https://ssl-config.mozilla.org/).
 
-#### 🔢 IP Hash
-Same client IP always routes to the same server
+### Security Headers
 
-```nginx
-upstream backend {
-    ip_hash;
-    server app1:5001;
-    server app2:5002;
-}
-```
-
-**Best for:** Session persistence without shared storage (sticky sessions)
-**Why it matters:** User stays on same server, maintaining session state
-
----
-
-#### ⚡ Least Connections
-Traffic goes to the server with fewest active connections
+All responses include these security headers:
 
 ```nginx
-upstream backend {
-    least_conn;
-    server app1:5001;
-    server app2:5002;
-}
-```
+# HSTS - Forces HTTPS for 2 years
+add_header Strict-Transport-Security "max-age=63072000" always;
 
-**Best for:** Long-lived connections, varying request processing times
-**Why it matters:** Prevents one server from being overwhelmed while others sit idle
-
----
-
-#### ⚖️ Weighted Distribution
-Some servers handle more traffic based on their capacity
-
-```nginx
-upstream backend {
-    server powerful_server:5001 weight=3;
-    server normal_server:5002 weight=1;
-    # Powerful server gets 75% of traffic
-}
-```
-
-**Best for:** Mixed server specs, gradual rollouts (canary deployments), A/B testing
-
----
-
-> **Pro Tip:** Start with Round Robin for simplicity. Switch to IP Hash only if session management requires it (adds server affinity constraints). Use Least Connections for backends with unpredictable processing times.
-
-📂 **Explore:** [Nginx configurations](nginx/sites-available/) | [Load balancing setup](docs/architecture.md)
-
----
-
-## 🔧 Additional Nginx Capabilities
-
-**Reverse Proxy & SSL Termination**
-- Routes traffic to appropriate Docker containers based on subdomain
-- Handles HTTPS encryption/decryption at the edge
-- Adds security headers to all responses
-
-**Multi-Domain Server Blocks**
-- Hosts portfolio, recipe app, and bookfinder on same server
-- Each domain gets isolated configuration
-- Independent SSL certificates per subdomain
-
-### 🔒 Security Headers
-```nginx
+# Prevents clickjacking attacks
 add_header X-Frame-Options "SAMEORIGIN" always;
+
+# Prevents MIME-type sniffing
 add_header X-Content-Type-Options "nosniff" always;
+
+# Referrer policy for privacy
 add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+# Permissions policy (disable sensitive browser features)
 add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()" always;
-add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-eval'..." always;
+
+# Content Security Policy (customize per application)
+add_header Content-Security-Policy "default-src 'self' data:; img-src 'self' data: blob:; font-src 'self' data:;" always;
 ```
 
-## 📖 Documentation
+Learn more about [OWASP Secure Headers recommendations](https://owasp.org/www-project-secure-headers/) and [Mozilla security headers documentation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#security).
 
-- [Architecture Details](docs/architecture.md) - In-depth system design
-- [Deployment Guide](docs/deployment-guide.md) - Step-by-step deployment
-- [Security Setup](security/) - Security configuration guides
-- [Troubleshooting](docs/troubleshooting.md) - Common issues and solutions
+### Additional Security Measures
 
-## 🎯 Use Cases
+<div align="center">
+  <img src="assets/images/security/fail2ban.png" width="600px" alt="Fail2Ban Logs">
+  <br><br>
+  <em>Fail2Ban automatically bans IPs after repeated failed authentication attempts</em>
+</div>
 
-This infrastructure setup is ideal for:
-- Hosting multiple web applications on a budget
-- Learning production-grade DevOps practices
-- Portfolio/personal website with side projects
-- Small business web presence
-- Development and testing environments
+**UFW Firewall:**
+```bash
+ufw allow 22/tcp   # SSH
+ufw allow 80/tcp   # HTTP (redirects to HTTPS)
+ufw allow 443/tcp  # HTTPS
+ufw enable
+```
 
-## 🛡️ Security Best Practices
-
-- ✅ Automated SSL certificate renewal
-- ✅ Firewall rules (only ports 22, 80, 443 open)
-- ✅ Fail2Ban for brute-force protection
-- ✅ Security headers (CSP, HSTS, X-Frame-Options)
-- ✅ Database port isolation from internet
-- ✅ Regular security audits via SSL Labs & Observatory
-- ✅ Docker network segregation
-
-## 🔧 Challenges & Solutions
-
-### Challenge 1: Database Port Exposure Risk
-**Problem:** Initial Docker setup exposed PostgreSQL (5432) and MySQL (3306) ports directly to the host machine, creating a potential security vulnerability.
-
-**Solution:**
-- Implemented Docker network segregation with separate frontend and backend networks
-- Backend network accessible only to web application containers
-- Database ports remain internal to Docker network, never exposed to host
-- Result: Databases completely isolated from internet access
-
-**Learning:** Defense in depth requires multiple layers. Even with firewall rules, unexposed ports eliminate entire attack vectors.
+**Fail2Ban:** Monitors logs and automatically bans malicious IP addresses after repeated failed SSH or HTTP authentication attempts.
 
 ---
 
-### Challenge 2: SSL Certificate Automation
-**Problem:** Manual SSL certificate renewal every 90 days is error-prone and causes downtime if forgotten.
+## Key Learnings from Production
 
-**Solution:**
-- Configured Certbot systemd timer for automatic renewal checks twice daily
-- Set up renewal hooks to reload Nginx after certificate updates
-- Implemented monitoring to verify timer execution
-- Created backup procedures for certificate files
+### 1. Database Port Isolation
 
-**Learning:** Automation isn't just about convenience—it's about reliability. Scheduled renewals eliminated certificate expiration incidents.
+**Simple setup:** Database port `5432:5432` is exposed to the host, making it accessible from the Internet (protected only by firewall).
 
----
+**Load-balanced setup:** Database port is **not exposed**. The database exists only on the `backend` network, accessible solely by web containers. Even if the firewall fails, the database remains isolated.
 
-### Challenge 3: Resource Management on Limited Hardware
-**Problem:** 2GB RAM droplet hosting multiple applications risked memory exhaustion and container crashes.
+### 2. ip_hash for Session Persistence
 
-**Solution:**
-- Set memory limits (384MB) and reservations (192MB) per container
-- Configured CPU quotas (0.3 cores) to prevent CPU hogging
-- Implemented container restart policies
-- Monitored resource usage with `docker stats`
-- Result: Stable operation at 65% RAM usage with headroom for traffic spikes
+The `ip_hash` load balancing algorithm routes the same client IP to the same backend server, maintaining session state without requiring shared session storage like Redis. This is simpler for stateful Flask applications.
 
-**Learning:** Constraints drive optimization. Explicit resource limits prevent cascading failures and make scaling decisions data-driven.
+### 3. Resource Limits Prevent Cascading Failures
 
----
+Without resource limits, a memory leak in one container can consume all available RAM, crashing the database and other applications. With limits (`mem_limit: 384m`), Docker kills only the problematic container while others continue running.
 
-### Challenge 4: Nginx Configuration for Multiple Apps
-**Problem:** Hosting three different applications (static site + two Docker apps) on subdomains required complex routing.
+### 4. Network Segregation > Firewall Alone
 
-**Solution:**
-- Created separate server blocks for each subdomain
-- Configured reverse proxy directives with proper headers
-- Set up SSL for each subdomain
-- Implemented path-based routing where needed
-- Used location blocks for optimized static file serving
+Network segregation provides defense in depth. The database is unreachable from the Internet by design, not just by configuration. This architectural approach is more reliable than firewall rules alone.
 
-**Learning:** Nginx's flexibility shines in multi-app scenarios. Well-structured configs are easier to maintain than monolithic configurations.
+### 5. DNS-01 Simplifies Multi-Subdomain SSL
+
+A single wildcard certificate (`*.yourdomain.com`) via DNS-01 challenge covers all subdomains, simplifying certificate management and renewal.
+
+### 6. Auto Migrations Don't Scale
+
+The automatic migration service works well with a single instance but can cause race conditions with multiple instances. Manual migrations are more reliable for load-balanced setups.
 
 ---
 
-### Challenge 5: Docker Network Communication
-**Problem:** Initial attempts at container-to-container communication failed due to network misconfiguration.
+## Usage
 
-**Solution:**
-- Created custom bridge networks instead of default network
-- Assigned services to appropriate networks in docker-compose
-- Used service names for DNS resolution within Docker networks
-- Documented network topology in architecture diagrams
+### Prerequisites
 
-**Learning:** Docker's built-in DNS resolves service names automatically on custom networks. Understanding Docker networking fundamentals is crucial.
+- Ubuntu 24.04 LTS server (2GB RAM minimum)
+- Domain name with DNS access
+- Basic knowledge of Linux, Docker, and Nginx
+
+### Quick Start
+
+```bash
+# 1. Install dependencies
+apt update && apt upgrade -y
+apt install nginx docker.io docker-compose certbot ufw fail2ban
+
+# 2. Clone this repository
+git clone https://github.com/yourusername/production-server-infrastructure.git
+cd production-server-infrastructure
+
+# 3. Choose your setup
+cd docker/simple              # For single instance
+# OR
+cd docker/loadbalanced        # For load-balanced setup
+
+# 4. Copy and customize docker-compose.yml for your application
+
+# 5. Deploy
+docker-compose up -d
+
+# 6. Configure Nginx
+cp nginx/recipe-simple.conf /etc/nginx/sites-available/your-app
+# Edit the file to match your domain
+ln -s /etc/nginx/sites-available/your-app /etc/nginx/sites-enabled/
+nginx -t && systemctl reload nginx
+
+# 7. Obtain SSL certificate
+certbot --nginx -d your-app.your-domain.com
+
+# 8. Configure firewall
+ufw allow 22/tcp && ufw allow 80/tcp && ufw allow 443/tcp
+ufw enable
+```
 
 ---
 
-## 📝 Lessons Learned
+## Documentation
 
-### Technical Insights
+- [`nginx/recipe-simple.conf`](nginx/recipe-simple.conf) - Single instance reverse proxy
+- [`nginx/recipe-loadbalanced.conf`](nginx/recipe-loadbalanced.conf) - Load-balanced configuration
+- [`docker/simple/docker-compose.yml`](docker/simple/docker-compose.yml) - Simple Docker setup
+- [`docker/loadbalanced/docker-compose.yml`](docker/loadbalanced/docker-compose.yml) - Load-balanced Docker setup
+- [`docker/simple/scripts/wait-for-migrations.sh`](docker/simple/scripts/wait-for-migrations.sh) - Migration automation script
+- [`docs/ssl-setup.md`](docs/ssl-setup.md) - SSL/TLS configuration guide
 
-**1. Network Security Through Isolation**
-Docker network segregation proved more effective than firewall rules alone. The backend network architecture prevents database access even if other security layers fail. This "defense in depth" approach provides peace of mind and demonstrates enterprise-grade thinking.
+---
 
-**2. Resource Management is About Stability, Not Just Limits**
-Setting explicit memory and CPU limits wasn't just about preventing overconsumption—it provided predictable behavior under load. Memory reservations guaranteed minimum resources, while limits prevented runaway processes. This made the system's behavior consistent and debuggable.
+## License
 
-**3. Security Headers Dramatically Improve Ratings**
-Adding Content Security Policy, X-Frame-Options, and HSTS headers took security ratings from B to A+. The implementation effort was minimal (one Nginx config file), but the security improvement was substantial. Headers are low-hanging fruit for security hardening.
-
-**4. Automation Reduces Operational Burden**
-Certbot's automatic renewal timer eliminated certificate expiration concerns. Fail2Ban automatically blocks malicious IPs. Docker restart policies handle container failures. Each automation reduced potential failure points and operational overhead.
-
-**5. Documentation is a Force Multiplier**
-Creating comprehensive documentation during setup made troubleshooting faster and knowledge transfer easier. Architecture diagrams clarified complex concepts. Step-by-step guides enabled reproducibility. Documentation transformed this from a one-off project into a learning resource.
-
-### DevOps Practices
-
-**Infrastructure as Code Mindset**
-Even though this isn't fully automated with Terraform or Ansible, documenting configurations in Git provides version control, traceability, and reproducibility. This approach bridges manual setup and full IaC.
-
-**Monitoring Before Scaling**
-Understanding current resource utilization (65% RAM, 40% CPU) informs scaling decisions with data rather than guesswork. Monitoring tools like `docker stats` and Nginx logs provide visibility into system health.
-
-**Security First, Not Security Later**
-Implementing UFW, Fail2Ban, SSL, and security headers from day one created a secure foundation. Retrofitting security is harder than building it in from the start.
-
-**Cost-Performance Trade-offs**
-A $12/month droplet performs admirably for moderate traffic. Knowing when to optimize vs when to scale vertically vs when to scale horizontally comes from understanding current limits and costs.
-
-## 🤝 Contributing
-
-This is a personal portfolio project, but suggestions and improvements are welcome! Feel free to:
-- Open issues for questions or suggestions
-- Submit pull requests for improvements
-- Share your own infrastructure setups
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
 <div align="center">
 
-## 🌟 Let's Connect
+## Connect With Me
 
 [![Portfolio](https://img.shields.io/badge/Portfolio-vladbortnik.dev-0EA5E9?style=for-the-badge&logo=google-chrome&logoColor=white)](https://vladbortnik.dev)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/vladbortnik)
@@ -643,34 +554,12 @@ This is a personal portfolio project, but suggestions and improvements are welco
 
 <br>
 
-### 📝 Blog Series: From Zero to Production
+**Built with real production experience by [Vlad Bortnik](https://vladbortnik.dev)**
 
-*Coming Soon* - Deep-dives into production infrastructure setup
-
-```
-🔐 Part 1: Docker Network Security Patterns
-⚖️ Part 2: Nginx Load Balancing Algorithms Explained
-🔒 Part 3: SSL Automation & Certificate Management
-💰 Part 4: Cost Optimization: Self-Hosted vs Managed Platforms
-📊 Part 5: Monitoring & Observability Best Practices
-```
-
-*Subscribe to my [blog](https://vladbortnik.dev/blog) for updates when these drop*
-
-</div>
-
----
-
-<div align="center">
-
-**Built with ❤️ by [Vlad Bortnik](https://vladbortnik.dev)**
-Software Engineer | DevOps Enthusiast
+*Software Engineer | DevOps Enthusiast | Infrastructure Architect*
 
 <br>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
-
-⭐ **If this helped you, star the repo!** It helps others discover it.
+⭐ **Found this helpful? Star the repo!** It helps others discover production-ready configurations.
 
 </div>
-
