@@ -7,11 +7,11 @@ Real-world Nginx and Docker configurations from a production server hosting mult
 <div align="center">
 
 [![SSL Rating](https://img.shields.io/badge/SSL%20Labs-A-brightgreen)](https://www.ssllabs.com/ssltest/)
-[![Security Headers](https://img.shields.io/badge/Security%20Headers-A-brightgreen)](https://securityheaders.com/)
+[![Security Headers](https://img.shields.io/badge/Security%20Headers-A%2B-brightgreen)](https://securityheaders.com/)
 [![HTTP Observatory](https://img.shields.io/badge/HTTP%20Observatory-A%2B-brightgreen)](https://observatory.mozilla.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-[🌐 Live Demo](https://vladbortnik.dev) • [📖 Configs](#configuration-files) • [🔒 Security](#security)
+<a href="https://vladbortnik.dev/server-setup.html" target="_blank" rel="noopener noreferrer">🌐 Live Demo</a> • [📖 Configs](#configuration-files) • [🔒 Security](#security)
 
 </div>
 
@@ -42,6 +42,7 @@ This repository provides **production-tested configuration files** from my actua
 ### Infrastructure Overview
 
 **Single Server Setup:**
+
 - **Host**: DigitalOcean Droplet (Ubuntu 24.04 LTS, 2GB RAM, 1 vCPU)
 - **Web Server**: Nginx (reverse proxy, SSL termination, load balancing)
 - **Containerization**: Docker + Docker Compose
@@ -58,6 +59,7 @@ This repository provides **production-tested configuration files** from my actua
 </div>
 
 **Domain structure:**
+
 - `vladbortnik.dev` → Portfolio (static site served by Nginx)
 - `recipe.vladbortnik.dev` → Recipe App (Dockerized Flask + PostgreSQL)
 - `bookfinder.vladbortnik.dev` → BookFinder App (Dockerized Flask + MySQL)
@@ -67,18 +69,21 @@ This repository provides **production-tested configuration files** from my actua
 ## Tech Stack
 
 **Infrastructure:**
+
 - Ubuntu 24.04 LTS
 - Nginx (reverse proxy + load balancer)
 - Docker & Docker Compose
 - DigitalOcean DNS
 
 **Application:**
+
 - Flask web framework
 - Gunicorn WSGI server (4 workers per instance)
 - PostgreSQL 16.4
 - MySQL
 
 **Security:**
+
 - Let's Encrypt SSL/TLS (wildcard certificate via DNS-01 challenge)
 - TLS 1.3 only
 - Security headers (HSTS, CSP, X-Frame-Options, etc.)
@@ -141,16 +146,17 @@ services:
     command: ./scripts/wait-for-migrations.sh
     depends_on:
       - db
-    restart: "no"  # Runs once and exits
+    restart: "no" # Runs once and exits
 
   db:
     image: postgres:16.4
     ports:
-      - "5432:5432"  # ⚠️ Database port exposed to host
+      - "5432:5432" # ⚠️ Database port exposed to host
     restart: unless-stopped
 ```
 
 **Key characteristics:**
+
 - **1 web container** with Gunicorn (4 workers)
 - **Automatic migrations** via dedicated migration service
 - **Database port exposed** (`5432:5432`) for easy debugging
@@ -165,7 +171,7 @@ This Bash script waits for PostgreSQL to be ready, then runs Flask-Migrate comma
 
 [`nginx/recipe-simple.conf`](nginx/recipe-simple.conf)
 
-Nginx acts as a reverse proxy, forwarding HTTPS requests to the Flask application on port 5002. Learn more about [Nginx reverse proxy configuration](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/).
+Nginx acts as a reverse proxy, forwarding HTTPS requests to the Flask application on port 5002. Learn more about <a href="https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/" target="_blank" rel="noopener noreferrer">Nginx reverse proxy configuration</a>.
 
 ```nginx
 # HTTP → HTTPS redirect
@@ -201,6 +207,7 @@ server {
 ```
 
 **Usage:**
+
 ```bash
 cd docker/simple
 docker-compose up -d
@@ -244,9 +251,10 @@ server {
 
 **Why `ip_hash`?** The `ip_hash` directive ensures the same client IP always connects to the same backend server, maintaining session state without requiring shared session storage (like Redis). This is crucial for stateful Flask applications that store session data locally.
 
-Learn more about [Nginx load balancing algorithms](https://docs.nginx.com/nginx/admin-guide/load-balancer/http-load-balancer/) and the [upstream module](https://nginx.org/en/docs/http/ngx_http_upstream_module.html).
+Learn more about <a href="https://docs.nginx.com/nginx/admin-guide/load-balancer/http-load-balancer/" target="_blank" rel="noopener noreferrer">Nginx load balancing algorithms</a> and the <a href="https://nginx.org/en/docs/http/ngx_http_upstream_module.html" target="_blank" rel="noopener noreferrer">upstream module</a>.
 
 **Health checks:**
+
 - `max_fails=3`: Mark server unavailable after 3 failed attempts
 - `fail_timeout=30s`: Wait 30 seconds before retrying
 
@@ -262,16 +270,16 @@ Learn more about [Nginx load balancing algorithms](https://docs.nginx.com/nginx/
 
 ```yaml
 networks:
-  frontend:  # Internet-accessible
-  backend:   # Database access only
+  frontend: # Internet-accessible
+  backend: # Database access only
 
 services:
   web1:
     build: .
     command: gunicorn -w 4 -b 0.0.0.0:5002 run:app
     networks:
-      - frontend  # Can communicate with Nginx
-      - backend   # Can communicate with database
+      - frontend # Can communicate with Nginx
+      - backend # Can communicate with database
     ports:
       - "5002:5002"
     mem_limit: 384m
@@ -288,7 +296,7 @@ services:
   db:
     image: postgres:16.4
     networks:
-      - backend  # ONLY accessible via backend network
+      - backend # ONLY accessible via backend network
     # ports:     # ✅ Port NOT exposed to host
     #   - "5432:5432"
     mem_limit: 384m
@@ -296,7 +304,7 @@ services:
     cpus: 0.3
 ```
 
-**Network segregation explained:** The database is connected ONLY to the `backend` network, making it inaccessible from the Internet even if the firewall fails. Web containers connect to both networks, allowing them to receive traffic from Nginx (frontend) and query the database (backend). Learn more about [Docker Compose networking](https://docs.docker.com/compose/networking/).
+**Network segregation explained:** The database is connected ONLY to the `backend` network, making it inaccessible from the Internet even if the firewall fails. Web containers connect to both networks, allowing them to receive traffic from Nginx (frontend) and query the database (backend). Learn more about <a href="https://docs.docker.com/compose/networking/" target="_blank" rel="noopener noreferrer">Docker Compose networking</a>.
 
 <div align="center">
   <img src="assets/images/docker/networks-diagram.png" width="700px" alt="Docker Network Topology">
@@ -304,19 +312,22 @@ services:
   <em>Network topology showing 5 bridge networks including frontend/backend segregation</em>
 </div>
 
-**Resource limits explained:** Each container has explicit memory and CPU limits to prevent resource starvation. If one container experiences a memory leak and hits its 384MB limit, Docker kills only that container while others continue running. Learn more about [Docker resource constraints](https://docs.docker.com/config/containers/resource_constraints/).
+**Resource limits explained:** Each container has explicit memory and CPU limits to prevent resource starvation. If one container experiences a memory leak and hits its 384MB limit, Docker kills only that container while others continue running. Learn more about <a href="https://docs.docker.com/config/containers/resource_constraints/" target="_blank" rel="noopener noreferrer">Docker resource constraints</a>.
 
 **Why these values?**
+
 - 2GB total RAM ÷ 3 web instances ≈ 666MB per app
 - 384MB limit leaves 30% buffer for OS and traffic spikes
 - 192MB reservation guarantees minimum resources
 
 **⚠️ Migration note:** The automatic migration service doesn't work reliably with multiple instances. Run migrations manually before starting:
+
 ```bash
 docker-compose run --rm web1 flask db upgrade
 ```
 
 **Usage:**
+
 ```bash
 cd docker/loadbalanced
 docker-compose up -d
@@ -327,16 +338,16 @@ docker stats  # Monitor resource usage
 
 ## Simple vs Load-Balanced Comparison
 
-| Feature | Simple Setup | Load-Balanced Setup |
-|---------|-------------|---------------------|
-| **Web instances** | 1 | 3 |
-| **Networks** | Default (no segregation) | `frontend` + `backend` |
-| **Database port** | Exposed (`5432:5432`) | Not exposed (internal only) |
-| **Resource limits** | None | 384MB mem, 0.3 CPU per container |
-| **Auto migrations** | Yes (dedicated service) | No (manual: `docker-compose run --rm web1 flask db upgrade`) |
-| **Load balancing** | No | Yes (`ip_hash` algorithm) |
-| **High availability** | No (single point of failure) | Yes (survives 1-2 instance failures) |
-| **Best for** | Development, staging, small apps | Production with traffic spikes |
+| Feature               | Simple Setup                     | Load-Balanced Setup                                          |
+| --------------------- | -------------------------------- | ------------------------------------------------------------ |
+| **Web instances**     | 1                                | 3                                                            |
+| **Networks**          | Default (no segregation)         | `frontend` + `backend`                                       |
+| **Database port**     | Exposed (`5432:5432`)            | Not exposed (internal only)                                  |
+| **Resource limits**   | None                             | 384MB mem, 0.3 CPU per container                             |
+| **Auto migrations**   | Yes (dedicated service)          | No (manual: `docker-compose run --rm web1 flask db upgrade`) |
+| **Load balancing**    | No                               | Yes (`ip_hash` algorithm)                                    |
+| **High availability** | No (single point of failure)     | Yes (survives 1-2 instance failures)                         |
+| **Best for**          | Development, staging, small apps | Production with traffic spikes                               |
 
 ---
 
@@ -348,19 +359,20 @@ For servers hosting multiple applications on subdomains, **DNS-01 challenge** is
 
 **Why DNS-01 over HTTP-01?**
 
-| Feature | HTTP-01 | DNS-01 |
-|---------|---------|--------|
-| **Wildcard certificates** | ❌ Not supported | ✅ Supported (`*.yourdomain.com`) |
-| **Port 80 requirement** | ✅ Must be open | ❌ Not required |
-| **Multiple subdomains** | ❌ One cert per subdomain | ✅ One cert for all |
+| Feature                   | HTTP-01                   | DNS-01                            |
+| ------------------------- | ------------------------- | --------------------------------- |
+| **Wildcard certificates** | ❌ Not supported          | ✅ Supported (`*.yourdomain.com`) |
+| **Port 80 requirement**   | ✅ Must be open           | ❌ Not required                   |
+| **Multiple subdomains**   | ❌ One cert per subdomain | ✅ One cert for all               |
 
 **My setup:** A single wildcard certificate (`*.vladbortnik.dev`) covers all subdomains: `recipe.vladbortnik.dev`, `bookfinder.vladbortnik.dev`, and any future additions.
 
 **Detailed guide:** [`docs/ssl-setup.md`](docs/ssl-setup.md) explains DNS-01 vs HTTP-01 challenges with examples.
 
 **External resources:**
-- [Let's Encrypt Challenge Types](https://letsencrypt.org/docs/challenge-types/) - Official documentation
-- [Certbot Documentation](https://eff-certbot.readthedocs.io/) - Installation and automation
+
+- <a href="https://letsencrypt.org/docs/challenge-types/" target="_blank" rel="noopener noreferrer">Let's Encrypt Challenge Types</a> - Official documentation
+- <a href="https://eff-certbot.readthedocs.io/" target="_blank" rel="noopener noreferrer">Certbot Documentation</a> - Installation and automation
 
 ---
 
@@ -372,17 +384,18 @@ This infrastructure achieves A/A+ security ratings through modern TLS configurat
 
 <div align="center">
 
-| SSL Labs | HTTP Observatory | Security Headers |
-|----------|------------------|------------------|
+| SSL Labs                                                     | HTTP Observatory                                                                    | Security Headers                                                         |
+| ------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | ![SSL Labs A](assets/images/security/ssl-lab-test-score.png) | ![HTTP Observatory A+](assets/images/security/http-observatory-benchmark-score.png) | ![Security Headers A](assets/images/security/security-headers-score.png) |
-| **Grade: A** | **Grade: A+** | **Grade: A** |
+| **Grade: A**                                                 | **Grade: A+**                                                                       | **Grade: A+**                                                            |
 
 </div>
 
 **Test your own setup:**
-- [SSL Labs Server Test](https://www.ssllabs.com/ssltest/) - Comprehensive SSL/TLS analysis
-- [Mozilla Observatory](https://observatory.mozilla.org/) - Security configuration scanner
-- [Security Headers Test](https://securityheaders.com/) - HTTP header analyzer
+
+- <a href="https://www.ssllabs.com/ssltest/" target="_blank" rel="noopener noreferrer">SSL Labs Server Test</a> - Comprehensive SSL/TLS analysis
+- <a href="https://observatory.mozilla.org/" target="_blank" rel="noopener noreferrer">Mozilla Observatory</a> - Security configuration scanner
+- <a href="https://securityheaders.com/" target="_blank" rel="noopener noreferrer">Security Headers Test</a> - HTTP header analyzer
 
 ### TLS 1.3 Configuration
 
@@ -397,12 +410,13 @@ ssl_session_tickets off;
 ```
 
 **Benefits of TLS 1.3:**
+
 - Faster handshakes (1-RTT vs 2-RTT in TLS 1.2)
 - Removal of vulnerable cipher suites
 - Always-encrypted metadata
 - Forward secrecy by default
 
-Generate your own secure SSL configuration at [Mozilla SSL Configuration Generator](https://ssl-config.mozilla.org/).
+Generate your own secure SSL configuration at <a href="https://ssl-config.mozilla.org/" target="_blank" rel="noopener noreferrer">Mozilla SSL Configuration Generator</a>.
 
 ### Security Headers
 
@@ -428,7 +442,7 @@ add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment
 add_header Content-Security-Policy "default-src 'self' data:; img-src 'self' data: blob:; font-src 'self' data:;" always;
 ```
 
-Learn more about [OWASP Secure Headers recommendations](https://owasp.org/www-project-secure-headers/) and [Mozilla security headers documentation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#security).
+Learn more about <a href="https://owasp.org/www-project-secure-headers/" target="_blank" rel="noopener noreferrer">OWASP Secure Headers recommendations</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#security" target="_blank" rel="noopener noreferrer">Mozilla security headers documentation</a>.
 
 ### Additional Security Measures
 
@@ -439,6 +453,7 @@ Learn more about [OWASP Secure Headers recommendations](https://owasp.org/www-pr
 </div>
 
 **UFW Firewall:**
+
 ```bash
 ufw allow 22/tcp   # SSH
 ufw allow 80/tcp   # HTTP (redirects to HTTPS)
@@ -546,17 +561,17 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Connect With Me
 
-[![Portfolio](https://img.shields.io/badge/Portfolio-vladbortnik.dev-0EA5E9?style=for-the-badge&logo=google-chrome&logoColor=white)](https://vladbortnik.dev)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/vladbortnik)
-[![Twitter](https://img.shields.io/badge/Twitter-@vladbortnik__dev-1DA1F2?style=for-the-badge&logo=x&logoColor=white)](https://x.com/vladbortnik_dev)
-[![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/vladbortnik)
-[![Contact](https://img.shields.io/badge/Contact_Me-Get_In_Touch-00C853?style=for-the-badge&logo=gmail&logoColor=white)](https://vladbortnik.dev/contact.html)
+<a href="https://vladbortnik.dev/server-setup.html" target="_blank" rel="noopener noreferrer">![Portfolio](https://img.shields.io/badge/Portfolio-vladbortnik.dev-0EA5E9?style=for-the-badge&logo=google-chrome&logoColor=white)</a>
+<a href="https://www.linkedin.com/in/vladbortnik" target="_blank" rel="noopener noreferrer">![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)</a>
+<a href="https://x.com/vladbortnik_dev" target="_blank" rel="noopener noreferrer">![Twitter](https://img.shields.io/badge/Twitter-@vladbortnik__dev-1DA1F2?style=for-the-badge&logo=x&logoColor=white)</a>
+<a href="https://github.com/vladbortnik" target="_blank" rel="noopener noreferrer">![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?style=for-the-badge&logo=github&logoColor=white)</a>
+<a href="https://vladbortnik.dev/contact.html" target="_blank" rel="noopener noreferrer">![Contact](https://img.shields.io/badge/Contact_Me-Get_In_Touch-00C853?style=for-the-badge&logo=gmail&logoColor=white)</a>
 
 <br>
 
-**Built with real production experience by [Vlad Bortnik](https://vladbortnik.dev)**
+**Built with real production experience by <a href="https://vladbortnik.dev/server-setup.html" target="_blank" rel="noopener noreferrer">Vlad Bortnik</a>**
 
-*Software Engineer | DevOps Enthusiast | Infrastructure Architect*
+_Software Engineer | DevOps Enthusiast | Infrastructure Architect_
 
 <br>
 
