@@ -11,7 +11,7 @@ Real-world Nginx and Docker configurations from a production server hosting mult
 [![HTTP Observatory](https://img.shields.io/badge/HTTP%20Observatory-A%2B-brightgreen)](https://observatory.mozilla.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-<a href="https://vladbortnik.dev/server-setup.html" target="_blank" rel="noopener noreferrer">🌐 Live Demo</a> • [📖 Configs](#configuration-files) • [🔒 Security](#security)
+[🌐 Live Demo](https://vladbortnik.dev/server-setup.html) • [📖 Configs](#configuration-files) • [🔒 Security](#security)
 
 </div>
 
@@ -171,7 +171,7 @@ This Bash script waits for PostgreSQL to be ready, then runs Flask-Migrate comma
 
 [`nginx/recipe-simple.conf`](nginx/recipe-simple.conf)
 
-Nginx acts as a reverse proxy, forwarding HTTPS requests to the Flask application on port 5002. Learn more about <a href="https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/" target="_blank" rel="noopener noreferrer">Nginx reverse proxy configuration</a>.
+Nginx acts as a reverse proxy, forwarding HTTPS requests to the Flask application on port 5002. Learn more about [Nginx reverse proxy configuration](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/).
 
 ```nginx
 # HTTP → HTTPS redirect
@@ -251,7 +251,7 @@ server {
 
 **Why `ip_hash`?** The `ip_hash` directive ensures the same client IP always connects to the same backend server, maintaining session state without requiring shared session storage (like Redis). This is crucial for stateful Flask applications that store session data locally.
 
-Learn more about <a href="https://docs.nginx.com/nginx/admin-guide/load-balancer/http-load-balancer/" target="_blank" rel="noopener noreferrer">Nginx load balancing algorithms</a> and the <a href="https://nginx.org/en/docs/http/ngx_http_upstream_module.html" target="_blank" rel="noopener noreferrer">upstream module</a>.
+Learn more about [Nginx load balancing algorithms](https://docs.nginx.com/nginx/admin-guide/load-balancer/http-load-balancer/) and the [upstream module](https://nginx.org/en/docs/http/ngx_http_upstream_module.html).
 
 **Health checks:**
 
@@ -304,7 +304,7 @@ services:
     cpus: 0.3
 ```
 
-**Network segregation explained:** The database is connected ONLY to the `backend` network, making it inaccessible from the Internet even if the firewall fails. Web containers connect to both networks, allowing them to receive traffic from Nginx (frontend) and query the database (backend). Learn more about <a href="https://docs.docker.com/compose/networking/" target="_blank" rel="noopener noreferrer">Docker Compose networking</a>.
+**Network segregation explained:** The database is connected ONLY to the `backend` network, making it inaccessible from the Internet even if the firewall fails. Web containers connect to both networks, allowing them to receive traffic from Nginx (frontend) and query the database (backend). Learn more about [Docker Compose networking](https://docs.docker.com/compose/networking/).
 
 <div align="center">
   <img src="assets/images/docker/networks-diagram.png" width="700px" alt="Docker Network Topology">
@@ -312,7 +312,7 @@ services:
   <em>Network topology showing 5 bridge networks including frontend/backend segregation</em>
 </div>
 
-**Resource limits explained:** Each container has explicit memory and CPU limits to prevent resource starvation. If one container experiences a memory leak and hits its 384MB limit, Docker kills only that container while others continue running. Learn more about <a href="https://docs.docker.com/config/containers/resource_constraints/" target="_blank" rel="noopener noreferrer">Docker resource constraints</a>.
+**Resource limits explained:** Each container has explicit memory and CPU limits to prevent resource starvation. If one container experiences a memory leak and hits its 384MB limit, Docker kills only that container while others continue running. Learn more about [Docker resource constraints](https://docs.docker.com/config/containers/resource_constraints/).
 
 **Why these values?**
 
@@ -371,8 +371,8 @@ For servers hosting multiple applications on subdomains, **DNS-01 challenge** is
 
 **External resources:**
 
-- <a href="https://letsencrypt.org/docs/challenge-types/" target="_blank" rel="noopener noreferrer">Let's Encrypt Challenge Types</a> - Official documentation
-- <a href="https://eff-certbot.readthedocs.io/" target="_blank" rel="noopener noreferrer">Certbot Documentation</a> - Installation and automation
+- [Let's Encrypt Challenge Types](https://letsencrypt.org/docs/challenge-types/) - Official documentation
+- [Certbot Documentation](https://eff-certbot.readthedocs.io/) - Installation and automation
 
 ---
 
@@ -393,9 +393,9 @@ This infrastructure achieves A/A+ security ratings through modern TLS configurat
 
 **Test your own setup:**
 
-- <a href="https://www.ssllabs.com/ssltest/" target="_blank" rel="noopener noreferrer">SSL Labs Server Test</a> - Comprehensive SSL/TLS analysis
-- <a href="https://observatory.mozilla.org/" target="_blank" rel="noopener noreferrer">Mozilla Observatory</a> - Security configuration scanner
-- <a href="https://securityheaders.com/" target="_blank" rel="noopener noreferrer">Security Headers Test</a> - HTTP header analyzer
+- [SSL Labs Server Test](https://www.ssllabs.com/ssltest/) - Comprehensive SSL/TLS analysis
+- [Mozilla Observatory](https://observatory.mozilla.org/) - Security configuration scanner
+- [Security Headers Test](https://securityheaders.com/) - HTTP header analyzer
 
 ### TLS 1.3 Configuration
 
@@ -416,7 +416,7 @@ ssl_session_tickets off;
 - Always-encrypted metadata
 - Forward secrecy by default
 
-Generate your own secure SSL configuration at <a href="https://ssl-config.mozilla.org/" target="_blank" rel="noopener noreferrer">Mozilla SSL Configuration Generator</a>.
+Generate your own secure SSL configuration at [Mozilla SSL Configuration Generator](https://ssl-config.mozilla.org/).
 
 ### Security Headers
 
@@ -442,7 +442,7 @@ add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment
 add_header Content-Security-Policy "default-src 'self' data:; img-src 'self' data: blob:; font-src 'self' data:;" always;
 ```
 
-Learn more about <a href="https://owasp.org/www-project-secure-headers/" target="_blank" rel="noopener noreferrer">OWASP Secure Headers recommendations</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#security" target="_blank" rel="noopener noreferrer">Mozilla security headers documentation</a>.
+Learn more about [OWASP Secure Headers recommendations](https://owasp.org/www-project-secure-headers/) and [Mozilla security headers documentation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#security).
 
 ### Additional Security Measures
 
@@ -561,15 +561,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Connect With Me
 
-<a href="https://vladbortnik.dev/server-setup.html" target="_blank" rel="noopener noreferrer">![Portfolio](https://img.shields.io/badge/Portfolio-vladbortnik.dev-0EA5E9?style=for-the-badge&logo=google-chrome&logoColor=white)</a>
-<a href="https://www.linkedin.com/in/vladbortnik" target="_blank" rel="noopener noreferrer">![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)</a>
-<a href="https://x.com/vladbortnik_dev" target="_blank" rel="noopener noreferrer">![Twitter](https://img.shields.io/badge/Twitter-@vladbortnik__dev-1DA1F2?style=for-the-badge&logo=x&logoColor=white)</a>
-<a href="https://github.com/vladbortnik" target="_blank" rel="noopener noreferrer">![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?style=for-the-badge&logo=github&logoColor=white)</a>
-<a href="https://vladbortnik.dev/contact.html" target="_blank" rel="noopener noreferrer">![Contact](https://img.shields.io/badge/Contact_Me-Get_In_Touch-00C853?style=for-the-badge&logo=gmail&logoColor=white)</a>
+[![Portfolio](https://img.shields.io/badge/Portfolio-vladbortnik.dev-0EA5E9?style=for-the-badge&logo=google-chrome&logoColor=white)](https://vladbortnik.dev)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/vladbortnik)
+[![Twitter](https://img.shields.io/badge/Twitter-@vladbortnik__dev-1DA1F2?style=for-the-badge&logo=x&logoColor=white)](https://x.com/vladbortnik_dev)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/vladbortnik)
+[![Contact](https://img.shields.io/badge/Contact_Me-Get_In_Touch-00C853?style=for-the-badge&logo=gmail&logoColor=white)](https://vladbortnik.dev/contact.html)
 
 <br>
 
-**Built with real production experience by <a href="https://vladbortnik.dev/server-setup.html" target="_blank" rel="noopener noreferrer">Vlad Bortnik</a>**
+**Built with real production experience by [Vlad Bortnik](https://vladbortnik.dev)**
 
 _Software Engineer | DevOps Enthusiast | Infrastructure Architect_
 
