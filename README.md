@@ -569,12 +569,23 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <br>
 
-**Built with real production experience by [Vlad Bortnik](https://vladbortnik.dev)**
+<p align="center">
+  **Built with real production experience by [Vlad Bortnik](https://vladbortnik.dev)**
+</p>
 
-_Software Engineer | DevOps Enthusiast | Infrastructure Architect_
+<p align="center">
+  Software Engineer | Frontend (React) → Backend (Flask, PostgreSQL) → Infrastructure (Docker, Nginx, Cloud) | NYC
+</p>
 
 <br>
 
-⭐ **Found this helpful? Star the repo!** It helps others discover production-ready configurations.
+<p align="center">
+  **Blog is now open:** I’m sharing practical write-ups from this setup and related projects.
+  [Explore the blog](https://vladbortnik.dev/blog/)
+</p>
+
+<p align="center">
+  **Found this helpful? Star the repo!** It helps others discover production-ready configurations.
+</p>
 
 </div>
